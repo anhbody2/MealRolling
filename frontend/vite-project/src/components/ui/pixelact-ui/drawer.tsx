@@ -1,0 +1,157 @@
+import { type VariantProps, cva } from "class-variance-authority";
+
+import { cn } from "#lib/utils";
+
+import {
+  Drawer as ShadcnDrawer,
+  DrawerClose as ShadcnDrawerClose,
+  DrawerContent as ShadcnDrawerContent,
+  DrawerDescription as ShadcnDrawerDescription,
+  DrawerFooter as ShadcnDrawerFooter,
+  DrawerHeader as ShadcnDrawerHeader,
+  DrawerOverlay as ShadcnDrawerOverlay,
+  DrawerPortal as ShadcnDrawerPortal,
+  DrawerTitle as ShadcnDrawerTitle,
+  DrawerTrigger as ShadcnDrawerTrigger,
+} from "#components/ui/drawer";
+
+import "./styles/styles.css"
+
+
+const Drawer = ShadcnDrawer;
+
+const DrawerPortal = ShadcnDrawerPortal;
+
+const DrawerOverlay = ShadcnDrawerOverlay;
+
+const DrawerClose = ShadcnDrawerClose;
+
+function DrawerTitle({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof ShadcnDrawerTitle>) {
+  return (
+    <ShadcnDrawerTitle className={cn(className)} {...props}>
+      {children}
+    </ShadcnDrawerTitle>
+  );
+}
+
+function DrawerDescription({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof ShadcnDrawerDescription>) {
+  return (
+    <ShadcnDrawerDescription className={cn(className)} {...props}>
+      {children}
+    </ShadcnDrawerDescription>
+  );
+}
+
+function DrawerTrigger({
+  className,
+  children,
+  asChild,
+  ...props
+}: React.ComponentProps<typeof ShadcnDrawerTrigger>) {
+  return (
+    <ShadcnDrawerTrigger
+      className={cn(
+        // Only apply default trigger styling when NOT using asChild
+        !asChild &&
+          "border-foreground dark:border-ring hover:bg-transparent active:bg-transparent focus:bg-transparent rounded-none border-4 focus:border-foreground hover:border-foreground dark:focus:border-ring bg-transparent data-[state=open]:bg-transparent data-[state=open]:border-foreground dark:data-[state=open]:border-ring",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </ShadcnDrawerTrigger>
+  );
+}
+
+export const drawerVariants = cva("", {
+  variants: {
+    font: {
+      normal: "",
+      pixel: "pixel-font",
+    },
+  },
+  defaultVariants: {
+    font: "pixel",
+  },
+});
+
+export type DrawerProps = React.ComponentProps<typeof ShadcnDrawerContent> &
+  VariantProps<typeof drawerVariants> & {
+    side?: "right" | "bottom" | "left";
+  };
+
+function DrawerContent({
+  className,
+  children,
+  side = "bottom",
+  ...props
+}: DrawerProps) {
+  return (
+    <ShadcnDrawerPortal data-slot="drawer-portal">
+      <ShadcnDrawerOverlay />
+      <ShadcnDrawerContent
+        data-slot="drawer-content"
+        className={cn(
+          "border-foreground outline-zinc-900 outline-dashed outline-6 -outline-offset-6 rounded-none p-6",
+          "group/drawer-content bg-background fixed z-50 flex h-auto flex-col",
+          side === "right" &&
+            "border-l-4 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 sm:max-w-sm",
+          side === "left" &&
+            "border-r-4 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 sm:max-w-sm",
+          side === "bottom" &&
+            "border-t-4 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom bottom-0 left-1/2 right-auto w-[1200px] -translate-x-1/2 h-auto",
+          className
+        )}
+        {...props}
+      >
+        <div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-none group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        {children}
+      </ShadcnDrawerContent>
+    </ShadcnDrawerPortal>
+  );
+}
+
+function DrawerHeader({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <ShadcnDrawerHeader className={cn("", className)} {...props}>
+      {children}
+    </ShadcnDrawerHeader>
+  );
+}
+
+function DrawerFooter({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <ShadcnDrawerFooter className={cn("", className)} {...props}>
+      {children}
+    </ShadcnDrawerFooter>
+  );
+}
+
+export {
+  Drawer,
+  DrawerHeader,
+  DrawerFooter,
+  DrawerClose,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerOverlay,
+  DrawerPortal,
+  DrawerTitle,
+  DrawerDescription,
+};
